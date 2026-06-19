@@ -6,5 +6,9 @@ const bracketData = createBracketData();
 </script>
 
 <template>
-  <TournamentBracket :data="bracketData" />
+  <TournamentBracket
+    :data="bracketData"
+    title="2026 世界杯"
+    subtitle="淘汰赛对阵"
+  />
 </template>

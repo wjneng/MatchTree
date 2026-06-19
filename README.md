@@ -43,7 +43,11 @@ const bracketData = createBracketData();
 </script>
 
 <template>
-  <TournamentBracket :data="bracketData" />
+  <TournamentBracket
+    :data="bracketData"
+    title="2026 世界杯"
+    subtitle="淘汰赛对阵"
+  />
 </template>
 ```
 
@@ -59,7 +63,11 @@ const bracketData = createBracketData();
 </script>
 
 <template>
-  <TournamentBracket :data="bracketData" />
+  <TournamentBracket
+    :data="bracketData"
+    title="2026 世界杯"
+    subtitle="淘汰赛对阵"
+  />
 </template>
 ```
 
@@ -109,8 +117,8 @@ const data = {
 <template>
   <TournamentBracket
     :data="data"
-    title="杯赛对阵"
-    subtitle="2026 赛季"
+    title="2026 世界杯"
+    subtitle="淘汰赛对阵"
     @select-match="(match) => console.log(match)"
   />
 </template>
@@ -124,8 +132,8 @@ const data = {
 | `teams` | `Object` | `null` | 单独覆盖球队字典 |
 | `matches` | `Array` | `null` | 单独覆盖比赛节点列表 |
 | `finalMatch` | `Object` | `null` | 单独覆盖决赛卡片 |
-| `title` | `String` | `淘汰赛对阵` | 头部标题 |
-| `subtitle` | `String` | `2025 冠军杯` | 头部副标题 |
+| `title` | `String` | `2026 世界杯` | 头部标题 |
+| `subtitle` | `String` | `淘汰赛对阵` | 头部副标题 |
 | `showHeader` | `Boolean` | `true` | 是否显示头部 |
 | `interactive` | `Boolean` | `true` | 是否允许点击比赛节点 |
 | `modalEnabled` | `Boolean` | `true` | 点击后是否显示赛事选择弹窗 |

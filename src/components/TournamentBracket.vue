@@ -24,11 +24,11 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: '淘汰赛对阵',
+    default: '2026 世界杯',
   },
   subtitle: {
     type: String,
-    default: '2025 冠军杯',
+    default: '淘汰赛对阵',
   },
   showHeader: {
     type: Boolean,
