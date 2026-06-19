@@ -1,0 +1,20 @@
+{
+  "name": "match-tree",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vue 3 足球淘汰赛对阵树组件",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.2",
+    "vite": "^7.2.7",
+    "vue": "^3.5.28"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}
