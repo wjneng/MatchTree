@@ -1,11 +1,11 @@
 # MatchTree
 
-Vue 3 足球淘汰赛对阵树源码组件，适合展示 16 强到决赛的杯赛晋级路径。
-
+Vue 3 足球淘汰赛对阵树源码组件，用于展示 16 强到决赛的杯赛晋级路径。组件已内置响应式等比缩放，窄屏下不会产生左右滚动，上下方向可正常滚动查看完整对阵图。
 
 ## 效果图
 
 ![MatchTree 效果图](docs/images/match-tree-preview.png)
+
 
 ## 源码集成
 
@@ -22,17 +22,17 @@ src/data/sampleBracketData.js
 src/styles.css
 ```
 
-如果目标项目想统一从一个入口导入，也可以一并复制：
+如果希望统一从一个入口导入，也可以一并复制：
 
 ```text
 src/index.js
 ```
 
-目标项目需要已经安装 Vue 3。
+目标项目需要已经安装 Vue 3。组件没有依赖额外 UI 库。
 
 ## 基础用法
 
-假设你把组件复制到目标项目的 `src/vendor/match-tree/`：
+假设组件复制到目标项目的 `src/vendor/match-tree/`：
 
 ```vue
 <script setup>
@@ -63,15 +63,13 @@ const bracketData = createBracketData();
 </script>
 
 <template>
-  <TournamentBracket
-    :data="bracketData"
-    title="2026 世界杯"
-    subtitle="淘汰赛对阵"
-  />
+  <TournamentBracket :data="bracketData" />
 </template>
 ```
 
-## 传入自定义数据
+## 自定义数据
+
+`data` 由 `teams`、`matches`、`finalMatch` 三部分组成。球队图标使用 `logo` 字段；如果没有传 `logo`，或者图片加载失败，组件会自动使用默认队徽。
 
 ```vue
 <script setup>
@@ -83,17 +81,17 @@ const data = {
     home: {
       name: '主队',
       short: 'HOM',
-      colors: ['#15376f', '#ffffff'],
+      logo: 'https://example.com/home-logo.png',
     },
     away: {
       name: '客队',
       short: 'AWY',
-      colors: ['#d81f32', '#ffffff'],
+      logo: 'https://example.com/away-logo.png',
     },
   },
   matches: [
     {
-      id: 'match-1',
+      id: 'top-1',
       phase: '上半区',
       round: '1/8 决赛',
       x: 5,
@@ -136,7 +134,8 @@ const data = {
 | `subtitle` | `String` | `淘汰赛对阵` | 头部副标题 |
 | `showHeader` | `Boolean` | `true` | 是否显示头部 |
 | `interactive` | `Boolean` | `true` | 是否允许点击比赛节点 |
-| `modalEnabled` | `Boolean` | `true` | 点击后是否显示赛事选择弹窗 |
+| `modalEnabled` | `Boolean` | `true` | 点击比赛节点后是否显示赛事选择弹窗 |
+| `defaultTeamLogo` | `String` | 内置默认队徽 | 自定义默认队徽，支持图片 URL 或 data URL |
 
 ## 事件
 
@@ -152,9 +151,17 @@ const data = {
 {
   name: '巴黎圣曼',
   short: 'PSG',
-  colors: ['#15376f', '#e31d3b'],
+  logo: 'https://crests.football-data.org/524.png',
 }
 ```
+
+字段说明：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `name` | `String` | 页面显示的球队名称 |
+| `short` | `String` | 球队短名，可作为业务侧标识 |
+| `logo` | `String` | 球队 logo 图片地址，可不传 |
 
 ### Match
 
@@ -174,11 +181,82 @@ const data = {
 }
 ```
 
-`x`、`y`、`width` 控制节点在对阵图中的位置和宽度。当前组件主要面向固定 16 队淘汰赛布局，如果要支持 8 队、32 队或自动布局，建议先在业务侧生成对应节点坐标。
+字段说明：
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `id` | `String` | 比赛唯一标识 |
+| `phase` | `String` | `上半区` 或 `下半区`，决定连线方向 |
+| `round` | `String` | 轮次描述，业务侧可用于统计或弹窗 |
+| `x` | `Number` | 节点在对阵图中的横向位置 |
+| `y` | `Number` | 节点在对阵图中的纵向位置 |
+| `width` | `Number` | 节点宽度 |
+| `teamIds` | `Array` | 两支球队在 `teams` 中的 key |
+| `scores` | `Array` | 两行比分或日期文本 |
+| `winnerId` | `String \| null` | 胜者球队 key；为空时不高亮胜者路径 |
+| `wideTeams` | `Boolean` | 是否使用较宽的球队分布，适合 1/4 决赛节点 |
+| `featured` | `Boolean` | 是否使用半决赛大节点样式 |
+
+`x`、`y`、`width` 控制节点布局。当前组件主要面向固定 16 队淘汰赛，如果要支持 8 队、32 队或自动布局，建议先在业务侧生成对应节点坐标。
+
+### FinalMatch
+
+```js
+{
+  id: 'final',
+  date: '05/31',
+  title: '决赛',
+  homeLabel: '第1场半决赛胜者',
+  awayLabel: '第2场半决赛胜者',
+}
+```
+
+## 响应式说明
+
+对阵图内部按 `430px` 设计宽度排版。组件会根据容器宽度自动等比缩放：
+
+- 宽屏下按原始尺寸展示
+- 窄屏下整体缩小，不产生左右滚动
+- 页面仍保留上下滚动，方便查看完整下半区
+- 比赛节点、队徽、文字和连线一起缩放，位置比例保持一致
+
+## 默认队徽
+
+默认情况下，组件会使用内置 SVG 队徽作为兜底。你也可以通过 `defaultTeamLogo` 覆盖：
+
+```vue
+<TournamentBracket
+  :data="bracketData"
+  default-team-logo="/images/default-team-logo.png"
+/>
+```
+
+当某支球队没有 `logo`，或 `logo` 加载失败时，会自动显示这个默认队徽。
+
+## 关闭交互
+
+如果只想展示静态对阵图，可以关闭交互：
+
+```vue
+<TournamentBracket
+  :data="bracketData"
+  :interactive="false"
+/>
+```
+
+如果仍需要 `select-match` 事件，但不需要内置弹窗，可以只关闭弹窗：
+
+```vue
+<TournamentBracket
+  :data="bracketData"
+  :modal-enabled="false"
+  @select-match="handleSelectMatch"
+/>
+```
 
 ## 导出内容
 
-如果复制了 `src/index.js`，可以这样统一导入：
+如果复制了 `src/index.js`，可以统一导入：
 
 ```js
 import {

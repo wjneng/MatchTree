@@ -49,6 +49,9 @@ const teamPositionStyle = (index) => {
 };
 
 const branchPaths = computed(() => {
+  const branchStartY = 3;
+  const branchEndY = 23;
+  const branchJointY = (branchStartY + branchEndY) / 2;
   const sideColumnWidth = (props.match.width - 40) / 2;
   const leftLogoX = props.match.featured
     ? 30
@@ -62,20 +65,20 @@ const branchPaths = computed(() => {
 
   if (branchPosition.value === 'top') {
     return {
-      leftBase: `M${leftLogoX} 24 V10 H${centerX}`,
-      rightBase: `M${rightLogoX} 24 V10 H${centerX}`,
-      pendingLine: `M${centerX} 10 V2`,
-      leftWin: `M${leftLogoX} 24 V10 H${centerX} V2`,
-      rightWin: `M${rightLogoX} 24 V10 H${centerX} V2`,
+      leftBase: `M${leftLogoX} ${branchEndY} V${branchJointY} H${centerX}`,
+      rightBase: `M${rightLogoX} ${branchEndY} V${branchJointY} H${centerX}`,
+      pendingLine: `M${centerX} ${branchJointY} V${branchStartY}`,
+      leftWin: `M${leftLogoX} ${branchEndY} V${branchJointY} H${centerX} V${branchStartY}`,
+      rightWin: `M${rightLogoX} ${branchEndY} V${branchJointY} H${centerX} V${branchStartY}`,
     };
   }
 
   return {
-    leftBase: `M${leftLogoX} 2 V16 H${centerX}`,
-    rightBase: `M${rightLogoX} 2 V16 H${centerX}`,
-    pendingLine: `M${centerX} 16 V24`,
-    leftWin: `M${leftLogoX} 2 V16 H${centerX} V24`,
-    rightWin: `M${rightLogoX} 2 V16 H${centerX} V24`,
+    leftBase: `M${leftLogoX} ${branchStartY} V${branchJointY} H${centerX}`,
+    rightBase: `M${rightLogoX} ${branchStartY} V${branchJointY} H${centerX}`,
+    pendingLine: `M${centerX} ${branchJointY} V${branchEndY}`,
+    leftWin: `M${leftLogoX} ${branchStartY} V${branchJointY} H${centerX} V${branchEndY}`,
+    rightWin: `M${rightLogoX} ${branchStartY} V${branchJointY} H${centerX} V${branchEndY}`,
   };
 });
 
