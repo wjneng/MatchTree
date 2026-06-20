@@ -85,7 +85,7 @@ button:focus-visible {
 }
 
 .bracket-viewport {
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   background:
     linear-gradient(90deg, #ffffff 30%, rgba(255, 255, 255, 0)),
@@ -101,12 +101,17 @@ button:focus-visible {
   background-attachment: local, local, scroll, scroll;
 }
 
+.bracket-scale {
+  position: relative;
+  margin: 0 auto;
+}
+
 .bracket-board {
   position: relative;
   width: 430px;
   height: 746px;
-  margin: 0 auto;
   background: #ffffff;
+  transform-origin: top left;
 }
 
 .match-node {

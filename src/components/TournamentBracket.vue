@@ -1,9 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import BracketMatch from './BracketMatch.vue';
 import FinalCard from './FinalCard.vue';
 import MatchPickerModal from './MatchPickerModal.vue';
 import { sampleBracketData } from '../data/sampleBracketData';
+
+const BOARD_WIDTH = 430;
+const BOARD_HEIGHT = 746;
 
 const props = defineProps({
   data: {
@@ -47,10 +50,48 @@ const props = defineProps({
 const emit = defineEmits(['select-match']);
 
 const activeMatch = ref(null);
+const bracketViewport = ref(null);
+const boardScale = ref(1);
+
+let resizeObserver = null;
 
 const bracketTeams = computed(() => props.teams ?? props.data.teams ?? {});
 const bracketMatches = computed(() => props.matches ?? props.data.matches ?? []);
 const bracketFinalMatch = computed(() => props.finalMatch ?? props.data.finalMatch ?? {});
+
+const updateBoardScale = () => {
+  const viewportWidth = bracketViewport.value?.clientWidth || BOARD_WIDTH;
+  boardScale.value = Math.min(1, viewportWidth / BOARD_WIDTH);
+};
+
+const scaledBoardStyle = computed(() => ({
+  width: `${BOARD_WIDTH * boardScale.value}px`,
+  height: `${BOARD_HEIGHT * boardScale.value}px`,
+}));
+
+const boardTransformStyle = computed(() => ({
+  transform: `scale(${boardScale.value})`,
+}));
+
+onMounted(() => {
+  updateBoardScale();
+
+  if (typeof ResizeObserver === 'undefined') {
+    window.addEventListener('resize', updateBoardScale);
+    return;
+  }
+
+  resizeObserver = new ResizeObserver(updateBoardScale);
+
+  if (bracketViewport.value) {
+    resizeObserver.observe(bracketViewport.value);
+  }
+});
+
+onBeforeUnmount(() => {
+  resizeObserver?.disconnect();
+  window.removeEventListener('resize', updateBoardScale);
+});
 
 const openMatchModal = (match) => {
   emit('select-match', match);
@@ -74,18 +115,20 @@ const openMatchModal = (match) => {
         <strong>{{ bracketFinalMatch.date }}</strong>
       </header>
 
-      <section class="bracket-viewport" aria-label="对阵树">
-        <div class="bracket-board">
-          <BracketMatch
-            v-for="match in bracketMatches"
-            :key="match.id"
-            :match="match"
-            :teams="bracketTeams"
-            :disabled="!interactive"
-            @select="openMatchModal"
-          />
+      <section ref="bracketViewport" class="bracket-viewport" aria-label="对阵树">
+        <div class="bracket-scale" :style="scaledBoardStyle">
+          <div class="bracket-board" :style="boardTransformStyle">
+            <BracketMatch
+              v-for="match in bracketMatches"
+              :key="match.id"
+              :match="match"
+              :teams="bracketTeams"
+              :disabled="!interactive"
+              @select="openMatchModal"
+            />
 
-          <FinalCard :final-match="bracketFinalMatch" />
+            <FinalCard :final-match="bracketFinalMatch" />
+          </div>
         </div>
       </section>
 
