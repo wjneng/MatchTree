@@ -20,7 +20,7 @@ const props = defineProps({
 defineEmits(['close']);
 
 const matchTeams = computed(() =>
-  props.match.teamIds.map((teamId) => props.teams[teamId]),
+  props.match.teamIds.map((teamId) => props.teams[teamId]).filter(Boolean),
 );
 
 const modalRows = computed(() => [
@@ -29,16 +29,16 @@ const modalRows = computed(() => [
     home: matchTeams.value[0],
     away: matchTeams.value[1],
     date: '03/12 04:00',
-    score: props.match.scores[0],
+    score: props.match.scores[0] ?? '',
   },
   {
     id: 'second-leg',
     home: matchTeams.value[1],
     away: matchTeams.value[0],
     date: '03/18 04:00',
-    score: props.match.scores[1],
+    score: props.match.scores[1] ?? '',
   },
-]);
+].filter((row) => row.home && row.away));
 </script>
 
 <template>

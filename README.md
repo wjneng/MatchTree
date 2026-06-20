@@ -71,6 +71,8 @@ const bracketData = createBracketData();
 
 `data` 由 `teams`、`matches`、`finalMatch` 三部分组成。球队图标使用 `logo` 字段；如果没有传 `logo`，或者图片加载失败，组件会自动使用默认队徽。
 
+比赛节点的坐标、宽度、连线方向、半区、轮次和节点样式已经封装在 `TournamentBracket` 内部。业务侧只需要把每个位置上的球队、比分、胜者等比赛内容传进来，不需要传 `id`、`phase`、`round`、`x`、`y`、`width` 这类组件内部字段。
+
 ```vue
 <script setup>
 import TournamentBracket from '@/vendor/match-tree/components/TournamentBracket.vue';
@@ -89,21 +91,15 @@ const data = {
       logo: 'https://example.com/away-logo.png',
     },
   },
-  matches: [
-    {
-      id: 'top-1',
-      phase: '上半区',
-      round: '1/8 决赛',
-      x: 5,
-      y: 18,
-      width: 96,
+  matches: {
+    top1: {
       teamIds: ['home', 'away'],
       scores: ['2-1', '1-1'],
       winnerId: 'home',
+      businessId: 'match-001',
     },
-  ],
+  },
   finalMatch: {
-    id: 'final',
     date: '05/31',
     title: '决赛',
     homeLabel: '第1场半决赛胜者',
@@ -128,7 +124,7 @@ const data = {
 | --- | --- | --- | --- |
 | `data` | `Object` | 内置示例数据 | 完整对阵数据，包含 `teams`、`matches`、`finalMatch` |
 | `teams` | `Object` | `null` | 单独覆盖球队字典 |
-| `matches` | `Array` | `null` | 单独覆盖比赛节点列表 |
+| `matches` | `Object \| Array` | `null` | 单独覆盖比赛数据；推荐使用对象槽位写法 |
 | `finalMatch` | `Object` | `null` | 单独覆盖决赛卡片 |
 | `title` | `String` | `2026 世界杯` | 头部标题 |
 | `subtitle` | `String` | `淘汰赛对阵` | 头部副标题 |
@@ -141,7 +137,7 @@ const data = {
 
 | 事件 | 参数 | 说明 |
 | --- | --- | --- |
-| `select-match` | `match` | 点击比赛节点时触发 |
+| `select-match` | `match` | 点击比赛节点时触发；回传业务数据以及组件派生出的 `slot`、`phase`、`round` |
 
 ## 数据结构
 
@@ -167,17 +163,10 @@ const data = {
 
 ```js
 {
-  id: 'top-1',
-  phase: '上半区',
-  round: '1/8 决赛',
-  x: 5,
-  y: 18,
-  width: 96,
   teamIds: ['psg', 'chelsea'],
   scores: ['5-2', '3-0'],
   winnerId: 'psg',
-  wideTeams: false,
-  featured: false,
+  businessId: 'match-001',
 }
 ```
 
@@ -185,25 +174,57 @@ const data = {
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
-| `id` | `String` | 比赛唯一标识 |
-| `phase` | `String` | `上半区` 或 `下半区`，决定连线方向 |
-| `round` | `String` | 轮次描述，业务侧可用于统计或弹窗 |
-| `x` | `Number` | 节点在对阵图中的横向位置 |
-| `y` | `Number` | 节点在对阵图中的纵向位置 |
-| `width` | `Number` | 节点宽度 |
 | `teamIds` | `Array` | 两支球队在 `teams` 中的 key |
 | `scores` | `Array` | 两行比分或日期文本 |
 | `winnerId` | `String \| null` | 胜者球队 key；为空时不高亮胜者路径 |
-| `wideTeams` | `Boolean` | 是否使用较宽的球队分布，适合 1/4 决赛节点 |
-| `featured` | `Boolean` | 是否使用半决赛大节点样式 |
+| `businessId` | `String \| Number` | 可选，业务侧自己的比赛 ID；点击节点时会原样回传 |
 
-`x`、`y`、`width` 控制节点布局。当前组件主要面向固定 16 队淘汰赛，如果要支持 8 队、32 队或自动布局，建议先在业务侧生成对应节点坐标。
+`matches` 推荐按位置对象传入。位置 key 只是数据槽位，用来表示这条比赛内容展示在哪个位置，不代表具体坐标：
+
+```text
+top1, top2, top3, top4,
+topQuarter1, topQuarter2, topSemi,
+bottomSemi,
+bottomQuarter1, bottomQuarter2,
+bottom1, bottom2, bottom3, bottom4
+```
+
+例如：
+
+```js
+const matches = {
+  top1: {
+    teamIds: ['psg', 'chelsea'],
+    scores: ['5-2', '3-0'],
+    winnerId: 'psg',
+    businessId: 'match-001',
+  },
+  topQuarter1: {
+    teamIds: ['psg', 'liverpool'],
+    scores: ['2-0', '2-0'],
+    winnerId: 'psg',
+  },
+};
+```
+
+点击节点时，组件会在回调参数里补充 `slot`、`phase`、`round`：
+
+```js
+{
+  slot: 'top1',
+  phase: '上半区',
+  round: '1/8 决赛',
+  teamIds: ['psg', 'chelsea'],
+  scores: ['5-2', '3-0'],
+  winnerId: 'psg',
+  businessId: 'match-001',
+}
+```
 
 ### FinalMatch
 
 ```js
 {
-  id: 'final',
   date: '05/31',
   title: '决赛',
   homeLabel: '第1场半决赛胜者',

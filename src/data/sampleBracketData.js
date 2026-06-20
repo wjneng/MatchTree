@@ -81,171 +81,80 @@ const teams = {
   },
 };
 
-const matches = [
-  {
-    id: 'top-1',
-    phase: '上半区',
-    round: '1/8 决赛',
-    x: 5,
-    y: 18,
-    width: 96,
+const matches = {
+  top1: {
     teamIds: ['psg', 'chelsea'],
     scores: ['5-2', '3-0'],
     winnerId: 'psg',
   },
-  {
-    id: 'top-2',
-    phase: '上半区',
-    round: '1/8 决赛',
-    x: 111,
-    y: 18,
-    width: 96,
+  top2: {
     teamIds: ['gala', 'liverpool'],
     scores: ['1-0', '0-4'],
     winnerId: 'liverpool',
   },
-  {
-    id: 'top-3',
-    phase: '上半区',
-    round: '1/8 决赛',
-    x: 223,
-    y: 18,
-    width: 96,
+  top3: {
     teamIds: ['madrid', 'city'],
     scores: ['3-0', '2-1'],
     winnerId: 'madrid',
   },
-  {
-    id: 'top-4',
-    phase: '上半区',
-    round: '1/8 决赛',
-    x: 329,
-    y: 18,
-    width: 96,
+  top4: {
     teamIds: ['atalanta', 'bayern'],
     scores: ['1-6', '1-4'],
     winnerId: 'bayern',
   },
-  {
-    id: 'top-q1',
-    phase: '上半区',
-    round: '1/4 决赛',
-    x: 14,
-    y: 91,
-    width: 184,
+  topQuarter1: {
     teamIds: ['psg', 'liverpool'],
     scores: ['2-0', '2-0'],
     winnerId: 'psg',
-    wideTeams: true,
   },
-  {
-    id: 'top-q2',
-    phase: '上半区',
-    round: '1/4 决赛',
-    x: 232,
-    y: 91,
-    width: 184,
+  topQuarter2: {
     teamIds: ['madrid', 'bayern'],
     scores: ['1-2', '3-4'],
     winnerId: 'bayern',
-    wideTeams: true,
   },
-  {
-    id: 'top-sf',
-    phase: '上半区',
-    round: '半决赛',
-    x: 76,
-    y: 161,
-    width: 278,
+  topSemi: {
     teamIds: ['psg', 'bayern'],
     scores: ['5-4', '05/07'],
     winnerId: 'psg',
-    featured: true,
   },
-  {
-    id: 'bottom-sf',
-    phase: '下半区',
-    round: '半决赛',
-    x: 76,
-    y: 391,
-    width: 278,
+  bottomSemi: {
     teamIds: ['atletico', 'arsenal'],
     scores: ['1-1', '05/06'],
     winnerId: null,
-    featured: true,
   },
-  {
-    id: 'bottom-q1',
-    phase: '下半区',
-    round: '1/4 决赛',
-    x: 14,
-    y: 475,
-    width: 184,
+  bottomQuarter1: {
     teamIds: ['barca', 'atletico'],
     scores: ['0-2', '2-1'],
     winnerId: 'atletico',
-    wideTeams: true,
   },
-  {
-    id: 'bottom-q2',
-    phase: '下半区',
-    round: '1/4 决赛',
-    x: 232,
-    y: 475,
-    width: 184,
+  bottomQuarter2: {
     teamIds: ['sporting', 'arsenal'],
     scores: ['0-1', '0-0'],
     winnerId: 'arsenal',
-    wideTeams: true,
   },
-  {
-    id: 'bottom-1',
-    phase: '下半区',
-    round: '1/8 决赛',
-    x: 5,
-    y: 552,
-    width: 96,
+  bottom1: {
     teamIds: ['newcastle', 'barca'],
     scores: ['1-1', '2-7'],
     winnerId: 'barca',
   },
-  {
-    id: 'bottom-2',
-    phase: '下半区',
-    round: '1/8 决赛',
-    x: 111,
-    y: 552,
-    width: 96,
+  bottom2: {
     teamIds: ['atletico', 'hotspur'],
     scores: ['5-2', '2-3'],
     winnerId: 'atletico',
   },
-  {
-    id: 'bottom-3',
-    phase: '下半区',
-    round: '1/8 决赛',
-    x: 223,
-    y: 552,
-    width: 96,
+  bottom3: {
     teamIds: ['bodo', 'sporting'],
     scores: ['3-0', '0-3'],
     winnerId: 'sporting',
   },
-  {
-    id: 'bottom-4',
-    phase: '下半区',
-    round: '1/8 决赛',
-    x: 329,
-    y: 552,
-    width: 96,
+  bottom4: {
     teamIds: ['feyenoord', 'arsenal'],
     scores: ['1-1', '0-2'],
     winnerId: 'arsenal',
   },
-];
+};
 
 const finalMatch = {
-  id: 'final',
   date: '05/31',
   title: '决赛',
   homeLabel: '第1场半决赛胜者',

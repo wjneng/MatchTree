@@ -33,7 +33,7 @@ const matchTeams = computed(() =>
 
 const winnerIndex = computed(() => props.match.teamIds.indexOf(props.match.winnerId));
 
-const branchPosition = computed(() => (props.match.phase === '下半区' ? 'top' : 'bottom'));
+const branchPosition = computed(() => props.match.branchPosition ?? 'bottom');
 
 const branchViewBox = computed(() => `0 0 ${props.match.width} 26`);
 
