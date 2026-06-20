@@ -72,6 +72,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  connectorStyle: {
+    type: String,
+    default: 'straight',
+    validator: (value) => ['straight', 'curve'].includes(value),
+  },
 });
 
 const emit = defineEmits(['select-match']);
@@ -86,6 +91,9 @@ const bracketTeams = computed(() => props.teams ?? props.data.teams ?? {});
 const bracketMatches = computed(() => props.matches ?? props.data.matches ?? []);
 const bracketFinalMatch = computed(() => props.finalMatch ?? props.data.finalMatch ?? {});
 const fallbackTeamLogo = computed(() => props.defaultTeamLogo || DEFAULT_TEAM_LOGO);
+const normalizedConnectorStyle = computed(() =>
+  props.connectorStyle === 'curve' ? 'curve' : 'straight',
+);
 
 const isSlotMatch = (match, slot) => {
   const matchKeys = [match.slot, match.position, match.id].filter(Boolean);
@@ -211,6 +219,7 @@ const openMatchModal = (match) => {
               :teams="bracketTeams"
               :disabled="!interactive"
               :default-team-logo="fallbackTeamLogo"
+              :connector-style="normalizedConnectorStyle"
               @select="openMatchModal"
             />
 

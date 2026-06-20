@@ -186,6 +186,11 @@ button:focus-visible {
   vector-effect: non-scaling-stroke;
 }
 
+.match-branch--curve .branch-line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .branch-line--base {
   stroke: #ece7e7;
 }

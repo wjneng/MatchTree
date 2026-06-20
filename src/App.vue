@@ -8,6 +8,7 @@ const bracketData = createBracketData();
 <template>
   <TournamentBracket
     :data="bracketData"
+    connector-style="curve"
     title="2026 世界杯"
     subtitle="淘汰赛对阵"
   />

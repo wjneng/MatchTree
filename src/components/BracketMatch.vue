@@ -23,6 +23,11 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  connectorStyle: {
+    type: String,
+    default: 'straight',
+    validator: (value) => ['straight', 'curve'].includes(value),
+  },
 });
 
 defineEmits(['select']);
@@ -37,6 +42,10 @@ const branchPosition = computed(() => props.match.branchPosition ?? 'bottom');
 
 const branchViewBox = computed(() => `0 0 ${props.match.width} 26`);
 
+const normalizedConnectorStyle = computed(() =>
+  props.connectorStyle === 'curve' ? 'curve' : 'straight',
+);
+
 const teamPositionStyle = (index) => {
   if (!props.match.wideTeams) {
     return {};
@@ -46,6 +55,51 @@ const teamPositionStyle = (index) => {
   return {
     left: `${x}px`,
   };
+};
+
+const createStraightBranchPath = ({
+  centerX,
+  includeTarget,
+  jointY,
+  logoX,
+  logoY,
+  targetY,
+}) => {
+  const targetSegment = includeTarget ? ` V${targetY}` : '';
+  return `M${logoX} ${logoY} V${jointY} H${centerX}${targetSegment}`;
+};
+
+const createCurveBranchPath = ({
+  centerX,
+  includeTarget,
+  jointY,
+  logoX,
+  logoY,
+  targetY,
+}) => {
+  const radius = Math.min(
+    8,
+    Math.abs(centerX - logoX) / 2,
+    Math.abs(jointY - logoY) / 2,
+    includeTarget ? Math.abs(targetY - jointY) / 2 : 8,
+  );
+  const logoBendY = logoY < jointY ? jointY - radius : jointY + radius;
+  const logoExitX = logoX < centerX ? logoX + radius : logoX - radius;
+  const centerApproachX = logoX < centerX ? centerX - radius : centerX + radius;
+
+  if (!includeTarget) {
+    return `M${logoX} ${logoY} V${logoBendY} Q${logoX} ${jointY} ${logoExitX} ${jointY} H${centerX}`;
+  }
+
+  const centerExitY = targetY < jointY ? jointY - radius : jointY + radius;
+  return [
+    `M${logoX} ${logoY}`,
+    `V${logoBendY}`,
+    `Q${logoX} ${jointY} ${logoExitX} ${jointY}`,
+    `H${centerApproachX}`,
+    `Q${centerX} ${jointY} ${centerX} ${centerExitY}`,
+    `V${targetY}`,
+  ].join(' ');
 };
 
 const branchPaths = computed(() => {
@@ -62,23 +116,46 @@ const branchPaths = computed(() => {
     ? props.match.width - leftLogoX
     : props.match.width - leftLogoX;
   const centerX = (leftLogoX + rightLogoX) / 2;
-
-  if (branchPosition.value === 'top') {
-    return {
-      leftBase: `M${leftLogoX} ${branchEndY} V${branchJointY} H${centerX}`,
-      rightBase: `M${rightLogoX} ${branchEndY} V${branchJointY} H${centerX}`,
-      pendingLine: `M${centerX} ${branchJointY} V${branchStartY}`,
-      leftWin: `M${leftLogoX} ${branchEndY} V${branchJointY} H${centerX} V${branchStartY}`,
-      rightWin: `M${rightLogoX} ${branchEndY} V${branchJointY} H${centerX} V${branchStartY}`,
-    };
-  }
+  const logoY = branchPosition.value === 'top' ? branchEndY : branchStartY;
+  const targetY = branchPosition.value === 'top' ? branchStartY : branchEndY;
+  const createBranchPath = normalizedConnectorStyle.value === 'curve'
+    ? createCurveBranchPath
+    : createStraightBranchPath;
 
   return {
-    leftBase: `M${leftLogoX} ${branchStartY} V${branchJointY} H${centerX}`,
-    rightBase: `M${rightLogoX} ${branchStartY} V${branchJointY} H${centerX}`,
-    pendingLine: `M${centerX} ${branchJointY} V${branchEndY}`,
-    leftWin: `M${leftLogoX} ${branchStartY} V${branchJointY} H${centerX} V${branchEndY}`,
-    rightWin: `M${rightLogoX} ${branchStartY} V${branchJointY} H${centerX} V${branchEndY}`,
+    leftBase: createBranchPath({
+      centerX,
+      includeTarget: false,
+      jointY: branchJointY,
+      logoX: leftLogoX,
+      logoY,
+      targetY,
+    }),
+    rightBase: createBranchPath({
+      centerX,
+      includeTarget: false,
+      jointY: branchJointY,
+      logoX: rightLogoX,
+      logoY,
+      targetY,
+    }),
+    pendingLine: `M${centerX} ${branchJointY} V${targetY}`,
+    leftWin: createBranchPath({
+      centerX,
+      includeTarget: true,
+      jointY: branchJointY,
+      logoX: leftLogoX,
+      logoY,
+      targetY,
+    }),
+    rightWin: createBranchPath({
+      centerX,
+      includeTarget: true,
+      jointY: branchJointY,
+      logoX: rightLogoX,
+      logoY,
+      targetY,
+    }),
   };
 });
 
@@ -126,7 +203,10 @@ const nodeStyle = computed(() => ({
 
     <svg
       class="match-branch"
-      :class="[`match-branch--${branchPosition}`]"
+      :class="[
+        `match-branch--${branchPosition}`,
+        `match-branch--${normalizedConnectorStyle}`,
+      ]"
       :viewBox="branchViewBox"
       preserveAspectRatio="none"
       aria-hidden="true"
