@@ -19,6 +19,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  defaultTeamLogo: {
+    type: String,
+    default: '',
+  },
 });
 
 defineEmits(['select']);
@@ -107,6 +111,7 @@ const nodeStyle = computed(() => ({
           :team="team"
           :size="match.featured ? 'lg' : 'md'"
           :muted="Boolean(match.winnerId && team !== teams[match.winnerId])"
+          :default-logo="defaultTeamLogo"
         />
         <span class="team-name">{{ team.name }}</span>
       </span>

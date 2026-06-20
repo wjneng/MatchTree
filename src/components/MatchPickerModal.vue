@@ -11,6 +11,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  defaultTeamLogo: {
+    type: String,
+    default: '',
+  },
 });
 
 defineEmits(['close']);
@@ -54,7 +58,7 @@ const modalRows = computed(() => [
         type="button"
       >
         <span class="match-picker__team">
-          <TeamBadge :team="row.home" size="md" />
+          <TeamBadge :team="row.home" size="md" :default-logo="defaultTeamLogo" />
           <span>{{ row.home.name }}</span>
         </span>
 
@@ -64,7 +68,7 @@ const modalRows = computed(() => [
         </span>
 
         <span class="match-picker__team">
-          <TeamBadge :team="row.away" size="md" />
+          <TeamBadge :team="row.away" size="md" :default-logo="defaultTeamLogo" />
           <span>{{ row.away.name }}</span>
         </span>
 

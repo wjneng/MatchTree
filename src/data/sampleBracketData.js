@@ -2,82 +2,82 @@ const teams = {
   psg: {
     name: '巴黎圣曼',
     short: 'PSG',
-    colors: ['#15376f', '#e31d3b'],
+    logo: 'https://crests.football-data.org/524.png',
   },
   chelsea: {
     name: '切尔西',
     short: 'CHE',
-    colors: ['#0c4da2', '#ffffff'],
+    logo: 'https://crests.football-data.org/61.png',
   },
   gala: {
     name: '加拉塔萨',
     short: 'GAL',
-    colors: ['#f6b422', '#b31b29'],
+    logo: 'https://crests.football-data.org/610.png',
   },
   liverpool: {
     name: '利物浦',
     short: 'LIV',
-    colors: ['#d00027', '#00a398'],
+    logo: 'https://crests.football-data.org/64.png',
   },
   madrid: {
     name: '皇马',
     short: 'RMA',
-    colors: ['#f4c542', '#ffffff'],
+    logo: 'https://crests.football-data.org/86.png',
   },
   city: {
     name: '曼城',
     short: 'MCI',
-    colors: ['#7ab7e8', '#ffffff'],
+    logo: 'https://crests.football-data.org/65.png',
   },
   atalanta: {
     name: '亚特兰大',
     short: 'ATA',
-    colors: ['#1f5aa6', '#111111'],
+    logo: 'https://crests.football-data.org/102.png',
   },
   bayern: {
     name: '拜仁',
     short: 'BAY',
-    colors: ['#d81f32', '#2858a8'],
+    logo: 'https://crests.football-data.org/5.png',
   },
   atletico: {
     name: '马竞',
     short: 'ATM',
-    colors: ['#c8182b', '#174a97'],
+    logo: 'https://crests.football-data.org/78.png',
   },
   arsenal: {
     name: '阿森纳',
     short: 'ARS',
-    colors: ['#e51b23', '#f2c14e'],
+    logo: 'https://crests.football-data.org/57.png',
   },
   barca: {
     name: '巴塞罗那',
     short: 'BAR',
-    colors: ['#1e3578', '#a60b2d'],
+    logo: 'https://crests.football-data.org/81.png',
   },
   newcastle: {
     name: '纽卡斯尔',
     short: 'NEW',
-    colors: ['#111111', '#d9d9d9'],
+    logo: 'https://crests.football-data.org/67.png',
   },
   sporting: {
     name: '里斯本',
     short: 'SCP',
-    colors: ['#169b62', '#ffffff'],
+    logo: 'https://crests.football-data.org/498.png',
   },
   bodo: {
     name: '博德闪耀',
     short: 'BOD',
-    colors: ['#f6d33a', '#111111'],
+    logo: 'https://crests.football-data.org/2011.png',
   },
   feyenoord: {
     name: '费耶诺德',
     short: 'FEY',
-    colors: ['#d91e36', '#ffffff'],
+    logo: 'https://crests.football-data.org/675.png',
   },
   hotspur: {
     name: '热刺',
     short: 'TOT',
-    colors: ['#132257', '#ffffff'],
+    logo: 'https://crests.football-data.org/73.png',
   },
 };
 

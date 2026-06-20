@@ -7,6 +7,13 @@ import { sampleBracketData } from '../data/sampleBracketData';
 
 const BOARD_WIDTH = 430;
 const BOARD_HEIGHT = 746;
+const DEFAULT_TEAM_LOGO = `data:image/svg+xml,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <path fill="#f7f8fb" stroke="#cfd4dd" stroke-width="4" d="M32 4 52 12v17c0 14-8 24-20 31C20 53 12 43 12 29V12L32 4Z"/>
+  <path fill="#e52c25" d="M32 13 43 18v10c0 8-4 15-11 20-7-5-11-12-11-20V18l11-5Z"/>
+  <path fill="#ffffff" d="M24 27h16v5H24zM29 21h6v22h-6z"/>
+</svg>
+`)}`;
 
 const props = defineProps({
   data: {
@@ -45,6 +52,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  defaultTeamLogo: {
+    type: String,
+    default: '',
+  },
 });
 
 const emit = defineEmits(['select-match']);
@@ -58,6 +69,7 @@ let resizeObserver = null;
 const bracketTeams = computed(() => props.teams ?? props.data.teams ?? {});
 const bracketMatches = computed(() => props.matches ?? props.data.matches ?? []);
 const bracketFinalMatch = computed(() => props.finalMatch ?? props.data.finalMatch ?? {});
+const fallbackTeamLogo = computed(() => props.defaultTeamLogo || DEFAULT_TEAM_LOGO);
 
 const updateBoardScale = () => {
   const viewportWidth = bracketViewport.value?.clientWidth || BOARD_WIDTH;
@@ -124,6 +136,7 @@ const openMatchModal = (match) => {
               :match="match"
               :teams="bracketTeams"
               :disabled="!interactive"
+              :default-team-logo="fallbackTeamLogo"
               @select="openMatchModal"
             />
 
@@ -136,6 +149,7 @@ const openMatchModal = (match) => {
         v-if="activeMatch && interactive && modalEnabled"
         :match="activeMatch"
         :teams="bracketTeams"
+        :default-team-logo="fallbackTeamLogo"
         @close="activeMatch = null"
       />
     </section>
