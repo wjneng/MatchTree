@@ -1,6 +1,6 @@
 # MatchTree
 
-Vue 3 足球淘汰赛对阵树源码组件，用于展示 16 强到决赛的杯赛晋级路径。组件已内置响应式等比缩放，窄屏下不会产生左右滚动，上下方向可正常滚动查看完整对阵图。
+Vue 3 足球淘汰赛对阵树源码组件，用于展示 16 强到决赛的杯赛晋级路径。
 
 ## 效果图
 
@@ -80,7 +80,6 @@ const bracketData = createBracketData();
 
 `data` 由 `teams`、`matches`、`finalMatch` 三部分组成。球队图标使用 `logo` 字段；如果没有传 `logo`，或者图片加载失败，组件会自动使用默认队徽。
 
-比赛节点的坐标、宽度、连线方向、半区、轮次和节点样式已经封装在 `TournamentBracket` 内部。业务侧只需要把每个位置上的球队、比分、胜者等比赛内容传进来，不需要传 `id`、`phase`、`round`、`x`、`y`、`width` 这类组件内部字段。
 
 ```vue
 <script setup>
